@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block header %}
+<h1>{{ heading }}</h1>
+<h3> guys, lu sekarang login sebagai : {{ user }}</h3>
+{% endblock header %}
+{% block title %}
+{{ title }}
+{% endblock title %}
+{% block content %}
+
+   <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Daftar</button>
+    </form>
+
+{% endblock content %}
