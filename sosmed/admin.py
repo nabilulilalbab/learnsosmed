@@ -1,14 +1,34 @@
 from django.contrib import admin
-from .models import Category, Post
+from .models import Category, Post,User,Profile
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
+class UserAdmin(BaseUserAdmin):
+    ordering = ['email']
+    list_display = ['email', 'name','is_staff']
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)  # Sesuaikan dengan field yang ingin Anda tampilkan
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal Info', {'fields': ('name','profile_picture','bio')}),
+        (
+            'Permissions',
+            {
+                'fields': (
+                    'groups',
+                    'is_active',
+                    'is_staff',
+                    'is_superuser',
+                )
+            }
+        )
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('name','email', 'password1', 'password2')
+        }),
+    )
 
-
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = (
-    'username', 'caption', 'created_at', 'categories','slug')  # Sesuaikan dengan field yang ingin Anda tampilkan
-    # Tambahkan 'slug', 'image' jika ingin diperlihatkan juga
+admin.site.register(Category)
+admin.site.register(Post)
+admin.site.register(Profile)
+admin.site.register(User,UserAdmin)
