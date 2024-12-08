@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import index, register_user, login_user, logout_user, setting, add_post, detail_profile, like_post, \
-    unlike_post, unsave_post, save_post, comments
+    unlike_post, unsave_post, save_post, comments,save_all
 
 app_name = "sosmed"
 
@@ -16,5 +16,6 @@ urlpatterns = [
     path('unlike/<int:post_id>/', unlike_post, name='unlike_post'),
     path('save/<int:post_id>/',save_post, name='save'),
     path('unsave/<int:post_id>/', unsave_post, name='unsave_post'),
+    path('save_all/', save_all, name='save_all'),
     path('detail_post/<int:post_id>/', comments, name='detail_post'),
 ]

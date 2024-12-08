@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
@@ -56,6 +55,7 @@ def index(request):
         'heading': 'Learn Sosmed',
         'posts': iterate_post(posts),
     })
+
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -151,7 +151,7 @@ def detail_profile(request, user_id):
 
 
 
-@login_required
+@login_required(login_url='sosmed:login')
 def like_post(request, post_id):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
@@ -161,7 +161,7 @@ def like_post(request, post_id):
 
         return JsonResponse({'like_count': like_count})
 
-@login_required
+@login_required(login_url='sosmed:login')
 def unlike_post(request, post_id):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
@@ -171,14 +171,15 @@ def unlike_post(request, post_id):
 
         return JsonResponse({'like_count': like_count})
 
-@login_required
+@login_required(login_url='sosmed:login')
 def save_post(request,post_id):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
         post.savers.add(request.user)
         post.save()
         return JsonResponse({'status': 'saved'})
-@login_required
+
+@login_required(login_url='sosmed:login')
 def unsave_post(request,post_id):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
@@ -186,6 +187,27 @@ def unsave_post(request,post_id):
         post.save()
         return JsonResponse({'status': 'unsaved'})
 
+@login_required(login_url='sosmed:login')
+def save_all(request):
+    """
+    Menampilkan semua postingan yang disave oleh user
+    """
+    try:
+        # Ambil semua post yang disave oleh user saat ini
+        saved_posts = Post.objects.filter(savers=request.user).order_by('-created_at')
+
+        context = {
+            'title': 'Postingan Tersimpan',
+            'heading': 'Postingan Tersimpan',
+            'posts': iterate_post(saved_posts),
+            'total_saved_posts': saved_posts.count()
+        }
+
+        return render(request, "sosmed/index.html", context)
+
+    except Exception as e:
+        messages.error(request, f"Error menampilkan postingan tersimpan: {str(e)}")
+        return redirect('sosmed:index')
 
 def comments(request, post_id):
     # if request.method == 'POST':
@@ -196,5 +218,4 @@ def comments(request, post_id):
         #
         # Comments.objects.create(post=post, user=request.user, comment=request.POST['comments'])
         return render(request, "sosmed/detail_post.html", context={'posts': (post_by_id)})
-
 
