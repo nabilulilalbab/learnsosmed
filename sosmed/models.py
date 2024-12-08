@@ -72,6 +72,7 @@ class Post(models.Model):
     slug = models.SlugField(blank=True, editable=False)
     categories = models.ForeignKey(Category, on_delete=models.CASCADE)
     liker = models.ManyToManyField(User, blank=True, related_name='likes')
+    like_count = models.IntegerField(default=0)
     savers = models.ManyToManyField(User, blank=True, related_name='saved')
     comment_count = models.IntegerField(default=0)
 
@@ -93,5 +94,12 @@ class Post(models.Model):
             return self.image.url
         return None
 
-
+class Comments(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    comment = models.TextField(blank=True)
+    image = models.ImageField(blank=True, upload_to='posts/')
+    video = models.FileField(blank=True, upload_to='posts/', null=True,
+                             validators=[FileExtensionValidator(allowed_extensions=['mp4', 'mov'])])
+    created_at = models.DateTimeField(auto_now_add=True)
 

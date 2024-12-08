@@ -1,16 +1,20 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 
 from .  forms import RegisterUserForm,PostForm
-from .models import Post, User
+from .models import Post, User,Comments
 
 
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
+
+from django.http import JsonResponse
+from .models import Post
 
 def iterate_post(posts):
     post_data = []
@@ -85,7 +89,6 @@ def logout_user(request):
 def setting(request):
     # Use the logged-in user directly
     user_profile = request.user
-
     if request.method == 'POST':
         # Fetch new data from the form
         image = request.FILES.get('image', user_profile.profile_picture)
@@ -132,8 +135,9 @@ def add_post(request):
             return redirect('sosmed:index')
     else:
         form = PostForm()
+    post = Post.objects.all().order_by('-created_at')
+    return render(request, 'sosmed/add_post.html', {'form': form,'posts': iterate_post(post)})
 
-    return render(request, 'sosmed/add_post.html', {'form': form})
 def detail_profile(request, user_id):
     user_profile = get_object_or_404(User, id=user_id)
     posts = Post.objects.filter(creator=user_profile).order_by('-created_at')
@@ -143,4 +147,54 @@ def detail_profile(request, user_id):
         'posts': iterate_post(posts),
         'profile': user_profile,
     })
+
+
+
+
+@login_required
+def like_post(request, post_id):
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        post.liker.add(request.user)
+        post.save()
+        like_count = post.liker.count()
+
+        return JsonResponse({'like_count': like_count})
+
+@login_required
+def unlike_post(request, post_id):
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        post.liker.remove(request.user)
+        post.save()
+        like_count = post.liker.count()
+
+        return JsonResponse({'like_count': like_count})
+
+@login_required
+def save_post(request,post_id):
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        post.savers.add(request.user)
+        post.save()
+        return JsonResponse({'status': 'saved'})
+@login_required
+def unsave_post(request,post_id):
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        post.savers.remove(request.user)
+        post.save()
+        return JsonResponse({'status': 'unsaved'})
+
+
+def comments(request, post_id):
+    # if request.method == 'POST':
+        post_by_id = Post.objects.get(id=post_id)
+        print(post_by_id)
+        # comments_all = Comments.objects.filter(post=post).order_by('-created_at')
+        # comments_count = len(comments_all)
+        #
+        # Comments.objects.create(post=post, user=request.user, comment=request.POST['comments'])
+        return render(request, "sosmed/detail_post.html", context={'posts': (post_by_id)})
+
 

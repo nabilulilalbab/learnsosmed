@@ -1,8 +1,6 @@
 from django.urls import path
-from .views import index, register_user, login_user, logout_user,setting,add_post,detail_profile
-
-
-
+from .views import index, register_user, login_user, logout_user, setting, add_post, detail_profile, like_post, \
+    unlike_post, unsave_post, save_post, comments
 
 app_name = "sosmed"
 
@@ -14,4 +12,9 @@ urlpatterns = [
     path("profile/<int:user_id>/", detail_profile, name="detail_profile"),
     path('settings/', setting, name='settings'),
     path('add_post/', add_post, name='add_post'),
+    path('like/<int:post_id>/', like_post, name='like_post'),
+    path('unlike/<int:post_id>/', unlike_post, name='unlike_post'),
+    path('save/<int:post_id>/',save_post, name='save'),
+    path('unsave/<int:post_id>/', unsave_post, name='unsave_post'),
+    path('detail_post/<int:post_id>/', comments, name='detail_post'),
 ]
