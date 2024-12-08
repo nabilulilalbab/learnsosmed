@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,8 +26,12 @@ SECRET_KEY = 'django-insecure-x2sze8!=8l68*j9u$vt)xg0f5y%90bxgg!+n&fx@w0zi*tt+(f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['905a-43-252-106-28.ngrok-free.app','localhost','127.0.0.1']
+CSRF_TRUSTED_ORIGINS = [
+    'https://905a-43-252-106-28.ngrok-free.app',  # Ganti dengan URL Ngrok Anda
+    'http://localhost',
+    'http://127.0.0.1'
+]
 
 # Application definition
 
@@ -37,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sosmed'
+    'sosmed',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -106,15 +112,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+LANGUAGE_CODE = 'id'  # Menggunakan 'id' untuk Bahasa Indonesia
+TIME_ZONE = 'Asia/Jakarta'  # Mengatur timezone ke Asia/Jakarta
 USE_I18N = True
-
 USE_TZ = True
-
-
+#
+# CRONJOBS = [
+#     ('0 0 * * *', 'sosmed.cron.create_midnight_post')
+# ]
+CRONJOBS = [
+    ('0 0 * * *', 'sosmed.cron.create_midnight_post')
+]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 

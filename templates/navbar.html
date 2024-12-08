@@ -1,22 +1,23 @@
- <!-- Navbar untuk versi desktop -->
-
-    <nav class="hidden md:flex justify-between items-center bg-white shadow-md p-4">
-        <div class="text-lg font-bold">Media Sosial</div>
-        <div class="space-x-4">
-            {%  if request.user.is_authenticated %}
-            <a href="{% url 'sosmed:add_post' %}" class="text-gray-700 hover:text-blue-500">+</a>    
-            <a href="{% url 'sosmed:index' %}" class="text-gray-700 hover:text-blue-500">Home</a>
-            <a href="#" class="text-gray-700 hover:text-blue-500">Ask</a>
-            <a href="#" class="text-gray-700 hover:text-blue-500">Profile</a>
-            <a href="#" class="text-gray-700 hover:text-blue-500">Save</a>
-            <a href="#" class="text-gray-700 hover:text-blue-500">Search</a>
-            <a href="{% url 'sosmed:logout' %}" class="text-gray-700 hover:text-blue-500">Logout</a>      
-            {% else %}
-            <a href="{% url 'sosmed:index' %}" class="text-gray-700 hover:text-blue-500">Home</a>      
-            <a href="{% url 'sosmed:login' %}" class="text-gray-700 hover:text-blue-500">Login</a>
-            <a href="{% url 'sosmed:register' %}" class="text-gray-700 hover:text-blue-500">Register</a>      
-            {% endif %}
+<!-- navbar.html (for desktop) -->
+<header class="bg-white border-b-4 border-black hidden lg:block">
+    <div class="container mx-auto px-4 py-2">
+        <div class="flex justify-between items-center">
+            <div>
+                <a href="{% url 'sosmed:index' %}">
+{#                    <img alt="logo" class="h-12 mr-4 border-4 border-black" src="your-logo-url.jpg">#}
+                    <h3>learn sosmed</h3>
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-black font-bold">
+                    <i class="fas fa-search"></i>
+                </button>
+                {% if user.is_authenticated %}
+                <a href="{% url 'sosmed:detail_profile' user_id=user.id %}" class="text-black font-bold">
+                    <img alt="User avatar" class="h-12 w-12 rounded-full border-4 border-black" src="{{ user.profile_picture.url }}">
+                </a>
+                {% endif %}
+            </div>
         </div>
-    </nav>
-
-
+    </div>
+</header>

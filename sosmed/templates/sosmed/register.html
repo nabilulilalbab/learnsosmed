@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 {% block header %}
-  <h1 class="text-3xl font-bold text-center">{{ heading }}</h1>
-  <h3 class="text-xl text-center">Guys, lu sekarang login sebagai: {{ user }}</h3>
+  <h1 class="text-4xl font-black text-center my-6">{{ heading }}</h1>
+  <h3 class="text-xl text-center mb-6">Guys, lu sekarang login sebagai: <span class="font-bold">{{ user }}</span></h3>
 {% endblock header %}
 
 {% block title %}
@@ -13,75 +13,74 @@
   {% include "navbar.html" %}
 
 <div class="container mx-auto px-4 py-8">
-  <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
-    <h2 class="text-2xl font-semibold text-center mb-6">Create Your Account</h2>
+  <div class="max-w-lg mx-auto bg-yellow-200 border-4 border-black p-8">
+    <h2 class="text-3xl font-bold text-center mb-6 text-black">Create Your Account</h2>
 
-    <form method="post">
-  {% csrf_token %}
-  <div class="space-y-4">
-    <!-- Email Field -->
-    <div>
-      {{ form.email.label_tag }}
-      {{ form.email }}
-      {% if form.email.errors %}
-        <ul class="mt-1 text-sm text-red-500">
-          {% for error in form.email.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      <div class="space-y-4">
+        <!-- Email Field -->
+        <div>
+          <label class="block text-black font-bold mb-1">{{ form.email.label_tag }}</label>
+          {{ form.email }}
+          {% if form.email.errors %}
+            <ul class="mt-1 text-sm text-red-500">
+              {% for error in form.email.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
 
-    <!-- Name Field -->
-    <div>
-      {{ form.name.label_tag }}
-      {{ form.name }}
-      {% if form.name.errors %}
-        <ul class="mt-1 text-sm text-red-500">
-          {% for error in form.name.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
+        <!-- Name Field -->
+        <div>
+          <label class="block text-black font-bold mb-1">{{ form.name.label_tag }}</label>
+          {{ form.name }}
+          {% if form.name.errors %}
+            <ul class="mt-1 text-sm text-red-500">
+              {% for error in form.name.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
 
-    <!-- Password Field -->
-    <div>
-      {{ form.password1.label_tag }}
-      {{ form.password1 }}
-      {% if form.password1.errors %}
-        <ul class="mt-1 text-sm text-red-500">
-          {% for error in form.password1.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
+        <!-- Password Field -->
+        <div>
+          <label class="block text-black font-bold mb-1">{{ form.password1.label_tag }}</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+            <ul class="mt-1 text-sm text-red-500">
+              {% for error in form.password1.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
 
-    <!-- Confirm Password Field -->
-    <div>
-      {{ form.password2.label_tag }}
-      {{ form.password2 }}
-      {% if form.password2.errors %}
-        <ul class="mt-1 text-sm text-red-500">
-          {% for error in form.password2.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
+        <!-- Confirm Password Field -->
+        <div>
+          <label class="block text-black font-bold mb-1">{{ form.password2.label_tag }}</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+            <ul class="mt-1 text-sm text-red-500">
+              {% for error in form.password2.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
 
-    <!-- Submit Button -->
-    <div>
-      <button type="submit" class="w-full py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300">
-        Daftar
-      </button>
-    </div>
-  </div>
-</form>
+        <!-- Submit Button -->
+        <div>
+          <button type="submit" class="w-full py-2 bg-black text-yellow-200 font-bold border-2 border-black transition-colors hover:bg-red-500 hover:text-white hover:border-red-500">
+            Daftar
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
 
-
-  {% include "navbarmobile.html" %}
+{% include "navbarmobile.html" %}
 {% endblock content %}

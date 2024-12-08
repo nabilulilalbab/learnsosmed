@@ -1,18 +1,43 @@
-    <!-- Navbar untuk versi mobile -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md p-4">
-        <div class="flex justify-around">
-            {%  if request.user.is_authenticated %}
-            <a href="{% url 'sosmed:add_post' %}" class="text-gray-700 hover:text-blue-500">+</a>
-                <a href="{% url 'sosmed:index' %}" class="text-gray-700 hover:text-blue-500">Home</a>
-            <a href="#" class="text-gray-700 hover:text-blue-500">Ask</a>
-            <a href="#" class="text-gray-700 hover:text-blue-500">Profile</a>
-            <a href="#" class="text-gray-700 hover:text-blue-500">Save</a>
-            <a href="#" class="text-gray-700 hover:text-blue-500">Search</a>
-            <a href="{% url 'sosmed:logout' %}" class="text-gray-700 hover:text-blue-500">Logout</a>
-            {% else %}
-            <a href="{% url 'sosmed:index' %}" class="text-gray-700 hover:text-blue-500">Home</a>
-            <a href="{% url 'sosmed:login' %}" class="text-gray-700 hover:text-blue-500">Login</a>
-            <a href="{% url 'sosmed:logout' %}" class="text-gray-700 hover:text-blue-500">Logout</a>
+<!-- mobile_header.html (for mobile) -->
+<header class="bg-white border-b-4 border-black block lg:hidden">
+    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+        <a href="{% url 'sosmed:index' %}">
+{#            <img alt="Medium logo" class="h-12 border-4 border-black" src="your-logo-url.jpg">#}
+            <h3>learn sosmed</h3>
+        </a>
+
+
+        <div class="relative">
+            <button type="button" class="text-black font-bold focus:outline-none" id="burgerButton">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-black rounded shadow-lg hidden">
+              {% if user.is_authenticated %}
+                <a href="#" class="block px-4 py-2 text-black hover:bg-gray-200">Link 1</a>
+                <a href="#" class="block px-4 py-2 text-black hover:bg-gray-200">Link 2</a>
+                <a href="{% url 'sosmed:logout' %}" class="block px-4 py-2 text-black hover:bg-gray-200">Logout</a>
+                {% else %}
+                <a href="{% url 'sosmed:login' %}" class="block px-4 py-2 text-black hover:bg-gray-200">Login</a>
+                <a href="{% url 'sosmed:register' %}" class="block px-4 py-2 text-black hover:bg-gray-200">Register</a>
             {% endif %}
+            </div>
         </div>
-    </nav>
+
+    </div>
+</header>
+
+<script>
+    document.getElementById('burgerButton').addEventListener('click', function() {
+        var dropdownMenu = document.getElementById('dropdownMenu');
+        dropdownMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+        var dropdownMenu = document.getElementById('dropdownMenu');
+        var button = document.getElementById('burgerButton');
+
+        if (!button.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+</script>

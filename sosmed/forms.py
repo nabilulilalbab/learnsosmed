@@ -12,4 +12,18 @@ class RegisterUserForm(UserCreationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['caption', 'image', 'categories']
+        fields = ['caption', 'image', 'video', 'categories']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                'class': (
+                    'appearance-none bg-gray-100 border-2 border-gray-300 '
+                    'w-full py-3 px-4 text-gray-700 rounded-lg focus:outline-none '
+                    'focus:ring-2 focus:ring-black transition duration-300'
+                )
+            })
+
+# Ensure to define additional styles for the `<form>` and `<button>` elements in your template
+

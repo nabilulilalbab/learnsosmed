@@ -1,7 +1,8 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser,BaseUserManager,PermissionsMixin
 from django.utils.text import slugify
-# Create your models here.
+
 class UserManager(BaseUserManager):
     def create_user(self, email,name, password):
         if not email:
@@ -36,7 +37,7 @@ class User(AbstractUser,PermissionsMixin):
     REQUIRED_FIELDS = ['name']
 
     def __str__(self):
-        return self.email
+        return f'{self.id} {self.email}'
     def has_perm(self, perm, obj=None):
         return True
     def has_module_perms(self, app_label):
@@ -44,11 +45,11 @@ class User(AbstractUser,PermissionsMixin):
     def get_short_name(self):
         return self.name.split('@')[0]
 
+    def img_url(self):
+        return self.profile_picture.url
+
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    id_user = models.CharField(max_length=200)
-    bio = models.TextField(max_length=500, blank=True)
-    profile_picture = models.ImageField(blank=True,default='profile.png',upload_to='profile_picture/')
 
     def __str__(self):
         return f'{self.user.name} Profile'
@@ -57,29 +58,40 @@ class Category(models.Model):
     name = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.name
+        return f'{self.name}'
+
 
 
 class Post(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
-    caption =  models.TextField(max_length=140, blank=True)
-    image = models.ImageField(blank=True,default='profile.png',upload_to='posts/')
+    caption = models.TextField(blank=True)
+    image = models.ImageField(blank=True, upload_to='posts/')
+    video = models.FileField(blank=True, upload_to='posts/', null=True,
+                             validators=[FileExtensionValidator(allowed_extensions=['mp4', 'mov'])])
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(blank=True, editable=False)
     categories = models.ForeignKey(Category, on_delete=models.CASCADE)
     liker = models.ManyToManyField(User, blank=True, related_name='likes')
     savers = models.ManyToManyField(User, blank=True, related_name='saved')
     comment_count = models.IntegerField(default=0)
+
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(f"{self.creator}-{self.id}")
+    #     super(Post, self).save(*args, **kwargs)
     def save(self, *args, **kwargs):
-        self.slug = slugify(f"{self.creator}-{self.id}")
-        super(Post,self).save(*args,**kwargs)
+        if not self.pk:  # If the object is new (hasn't been saved yet)
+            super().save(*args, **kwargs)  # Save to generate an ID
+        if not self.slug:  # Only set the slug if it hasn't been set yet
+            self.slug = slugify(f"{self.creator.id}-{self.id}")
+            super().save(update_fields=['slug'])  # Update only the slug field
+
     def __str__(self):
-        return  f"Post ID: {self.id} (creater: {self.creator})"
+        return f"Post ID: {self.id} (creator: {self.creator})"
 
     def img_url(self):
-        return self.image.url
+        if self.image:
+            return self.image.url
+        return None
 
-    def append(self, name, value):
-        self.name = value
 
 

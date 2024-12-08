@@ -1,0 +1,29 @@
+<nav class="nav-categories overflow-x-auto no-scrollbar mt-2 pb-2 border-b-4 border-black pl-6">    
+<div class="flex items-center space-x-6 mt-2">
+    {% if user.is_authenticated %}
+        <a class="text-black font-bold whitespace-nowrap mr-6" href="{% url 'sosmed:add_post' %}"><i class="fas fa-plus"></i></a>
+    {% endif %}
+        <a class="text-black font-bold whitespace-nowrap" href="{% url 'sosmed:index' %}">For you</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">For you</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">For you</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">For you</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">For you</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>
+        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>
+        <!-- More categories if needed -->
+    </div>
+</nav>
