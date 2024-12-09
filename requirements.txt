@@ -56,5 +56,6 @@ tqdm==4.67.1
 trove-classifiers==2023.9.19
 urllib3==2.0.6
 virtualenv==20.27.1
+whitenoise==6.8.2
 xmod==1.8.1
 zipp==3.17.0
