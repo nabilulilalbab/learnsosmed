@@ -103,3 +103,10 @@ class Comments(models.Model):
                              validators=[FileExtensionValidator(allowed_extensions=['mp4', 'mov'])])
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"commoe ID: {self.id} (creator: {self.user})"
+
+    def img_url(self):
+        if self.image:
+            return self.image.url
+        return None

@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 
-from .  forms import RegisterUserForm,PostForm
-from .models import Post, User,Comments
+from .  forms import RegisterUserForm,PostForm,CommentForm
+from .models import Post, User,Comments,Category
 
 
 from moviepy.video.io.VideoFileClip import VideoFileClip
@@ -209,13 +209,57 @@ def save_all(request):
         messages.error(request, f"Error menampilkan postingan tersimpan: {str(e)}")
         return redirect('sosmed:index')
 
+@login_required(login_url='sosmed:login')
 def comments(request, post_id):
     # if request.method == 'POST':
-        post_by_id = Post.objects.get(id=post_id)
-        print(post_by_id)
-        # comments_all = Comments.objects.filter(post=post).order_by('-created_at')
-        # comments_count = len(comments_all)
-        #
-        # Comments.objects.create(post=post, user=request.user, comment=request.POST['comments'])
-        return render(request, "sosmed/detail_post.html", context={'posts': (post_by_id)})
+    post_by_id = get_object_or_404(Post, id=post_id)
+    comments_all = Comments.objects.filter(post=post_by_id)
+    print(post_by_id)
+    # comments_count = len(comments_all)
+    if request.method == 'POST':
+            form = CommentForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.post = post_by_id
+                post.user = request.user
+                if 'video' in request.FILES:
+                    video_file = request.FILES['video']
+                    path = default_storage.save('uploads/' + video_file.name, ContentFile(video_file.read()))
+                    input_path = os.path.join(default_storage.location, path)
+                    output_filename = 'resized_' + video_file.name
+                    output_path = os.path.join(default_storage.location, 'uploads/', output_filename)
 
+                    # Use moviepy to resize the video
+                    with VideoFileClip(input_path) as video:
+                        resized_video = video.resized(width=640)  # Updated method
+                        resized_video.write_videofile(output_path, codec='libx264')
+
+                    # Save the resized video to the Post model
+                    with open(output_path, 'rb') as output_file:
+                        post.video.save(output_filename, output_file)
+                    default_storage.delete(path)
+                post.save()
+                return redirect('sosmed:detail_post', post_by_id.id)
+    else:
+        form = CommentForm()
+
+
+
+        # Comments.objects.create(post=post, user=request.user, comment=request.POST['comments'])
+    return render(request, "sosmed/detail_post.html", context={
+            'posts': post_by_id,
+            'form': form,
+            'like_count': post_by_id.liker.count(),
+            'comments_all': comments_all,
+        })
+
+
+
+
+def category_posts(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    posts = Post.objects.filter(categories=category).order_by('-created_at')
+    return render(request, 'sosmed/category.html', {
+        'category': category,
+        'posts': iterate_post(posts),
+    })

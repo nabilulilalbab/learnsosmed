@@ -16,6 +16,10 @@
                 <a href="{% url 'sosmed:detail_profile' user_id=user.id %}" class="text-black font-bold">
                     <img alt="User avatar" class="h-12 w-12 rounded-full border-4 border-black" src="{{ user.profile_picture.url }}">
                 </a>
+                <a href="{% url 'sosmed:logout' %}" class="block px-4 py-2 border-4 border-black text-black hover:bg-gray-200">Logout</a>
+                {% else %}
+                <a href="{% url 'sosmed:login' %}" class="block px-4 py-2 border-4 border-black text-black hover:bg-gray-200">Login</a>
+                <a href="{% url 'sosmed:register' %}" class="block px-4 border-4 border-black py-2 text-black hover:bg-gray-200">Register</a>
                 {% endif %}
             </div>
         </div>

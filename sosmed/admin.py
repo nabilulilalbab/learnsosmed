@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Post,User,Profile
+from .models import Category, Post,User,Profile,Comments
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 class UserAdmin(BaseUserAdmin):
@@ -31,4 +31,5 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(Category)
 admin.site.register(Post)
 admin.site.register(Profile)
+admin.site.register(Comments)
 admin.site.register(User,UserAdmin)

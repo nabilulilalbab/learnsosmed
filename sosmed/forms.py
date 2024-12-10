@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import Post
+from .models import Post,Comments
 class RegisterUserForm(UserCreationForm):
     class Meta:
         model = get_user_model()
@@ -26,4 +26,10 @@ class PostForm(forms.ModelForm):
             })
 
 # Ensure to define additional styles for the `<form>` and `<button>` elements in your template
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ['comment','image','video']
+
+
 
