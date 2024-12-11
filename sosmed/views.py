@@ -227,19 +227,19 @@ def comments(request, post_id):
                 if 'video' in request.FILES:
                     video_file = request.FILES['video']
                     path = default_storage.save('uploads/' + video_file.name, ContentFile(video_file.read()))
-                    input_path = os.path.join(default_storage.location, path)
                     output_filename = 'resized_' + video_file.name
-                    output_path = os.path.join(default_storage.location, 'uploads/', output_filename)
+                    resize_video_task.delay(path, 'uploads/', output_filename)  # Celery task dipanggil di sini
 
-                    # Use moviepy to resize the video
-                    with VideoFileClip(input_path) as video:
-                        resized_video = video.resized(width=640)  # Updated method
-                        resized_video.write_videofile(output_path, codec='libx264')
+                    post.video.name = os.path.join('uploads/', output_filename)  # Simpan nama file
+                elif 'image' in request.FILES:
+                    image_file = request.FILES['image']
+                    path = default_storage.save('uploads/' + image_file.name, ContentFile(image_file.read()))
+                    output_filename = 'compressed_' + image_file.name
 
-                    # Save the resized video to the Post model
-                    with open(output_path, 'rb') as output_file:
-                        post.video.save(output_filename, output_file)
-                    default_storage.delete(path)
+                    # Memanggil task Celery untuk kompresi gambar
+                    compress_image_task.delay(path, 'uploads/', output_filename)
+
+                    post.image.name = os.path.join('uploads/', output_filename)
                 post.save()
                 return redirect('sosmed:detail_post', post_by_id.id)
     else:

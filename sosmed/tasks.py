@@ -1,10 +1,10 @@
+from io import BytesIO
+
+from PIL import Image
 from celery import shared_task
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from django.core.files.storage import default_storage
 import os
-from PIL import Image
-from io import BytesIO
-from django.core.files.base import ContentFile
 import logging
 
 # Setup logging for better error tracking
@@ -25,7 +25,7 @@ def resize_video_task(video_path, output_dir, output_filename, width=640, bitrat
         # Resize video using MoviePy
         with VideoFileClip(input_path) as video:
             # Resize video to the specified width while maintaining aspect ratio
-            resized_video = video.resize(width=width)
+            resized_video = video.resized(width=width)
             resized_video.write_videofile(
                 output_path,
                 codec='libx264',  # Video codec (h.264)
@@ -41,9 +41,29 @@ def resize_video_task(video_path, output_dir, output_filename, width=640, bitrat
         # Log and raise exception for error handling
         logger.error(f"Error resizing video: {e}")
         raise
-
-
-
+#
+# @shared_task
+# def compress_image_task(image_path, output_dir, output_filename, target_width=800, quality=85):
+#     input_path = os.path.join(default_storage.location, image_path)
+#     output_path = os.path.join(default_storage.location, output_dir, output_filename)
+#
+#     try:
+#         with Image.open(input_path) as img:
+#             aspect_ratio = img.height / img.width
+#             target_height = int(target_width * aspect_ratio)
+#             img = img.resize((target_width, target_height), Image.Resampling.LANCZOS)  # Use LANCZOS instead of ANTIALIAS
+#
+#             output_io = BytesIO()
+#             img.save(output_io, format='JPEG', quality=quality, optimize=True)
+#             output_io.seek(0)
+#
+#             with open(output_path, 'wb') as f:
+#                 f.write(output_io.read())
+#
+#         return output_path
+#     except Exception as e:
+#         print(f"Error compressing image: {e}")
+#         raise
 @shared_task
 def compress_image_task(image_path, output_dir, output_filename, target_width=800, quality=85):
     input_path = os.path.join(default_storage.location, image_path)
@@ -51,10 +71,16 @@ def compress_image_task(image_path, output_dir, output_filename, target_width=80
 
     try:
         with Image.open(input_path) as img:
+            # Check if the image has an alpha channel (RGBA), and convert it to RGB if it does
+            if img.mode == 'RGBA':
+                img = img.convert('RGB')
+
+            # Resize the image to the target width while maintaining aspect ratio
             aspect_ratio = img.height / img.width
             target_height = int(target_width * aspect_ratio)
-            img = img.resize((target_width, target_height), Image.Resampling.LANCZOS)  # Use LANCZOS instead of ANTIALIAS
+            img = img.resize((target_width, target_height), Image.Resampling.LANCZOS)
 
+            # Save the image in JPEG format
             output_io = BytesIO()
             img.save(output_io, format='JPEG', quality=quality, optimize=True)
             output_io.seek(0)
