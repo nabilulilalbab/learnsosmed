@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 {% include "navbar.html" %}
-{% include "navbarmobile.html" %}
 {% include "category.html" %}
 
 <!-- Main Content -->
@@ -38,6 +37,11 @@
                 <div class="space-y-4">
                     <label for="about" class="block text-xl font-black">Bio</label>
                     <textarea id="about" name="bio" rows="4" class="w-full p-3 border-2 border-black bg-white shadow-inner rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">{{ profile.bio }}</textarea>
+                </div>
+                 <!-- LinkedIn Section -->
+                <div class="space-y-4">
+                    <label for="linkedin" class="block text-xl font-black">LinkedIn Profile Link</label>
+                    <input type="url" id="linkedin" name="linkedin" value="{{ profile.linkedin }}" class="w-full p-2 border-2 border-black bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="https://www.linkedin.com/in/username">
                 </div>
 
                 <!-- Action Buttons -->

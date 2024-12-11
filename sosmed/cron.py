@@ -74,3 +74,32 @@ def create_midnight_post():
 
 
 
+def create_every_minute_post():
+    print("hit cron job create_minute_post")
+    print("Waktu sekarang di Jakarta: It's midnight!")
+    data = ''
+    url = 'https://api.ryzendesu.vip/api/ai/claude'
+    params = {
+        'text': f'buatkan kata2 untuk motivasi maksimal 20 kata ,dengan bahasa jaksel,agar ngena di hati, {generate_motivational_quote()}',
+        'timestamp': time.time(),
+        'random': random.randint(1, 1000)
+    }
+    headers = {'accept': 'application/json'}
+    response = requests.get(url, params=params, headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+    else:
+        print(f"Error: {response.status_code}")
+    print(data.get('response', 'No response data'))
+    target_email = 'aigaul@learnsosmed.com'
+    user = get_object_or_404(User, email=target_email)
+    category = get_object_or_404(Category, id=2)
+    new_post = Post.objects.create(
+        creator=user,
+        caption=data['response'],
+        categories=category
+    )
+
+    print(f"Post by AI created at {timezone.now()}")
+
+

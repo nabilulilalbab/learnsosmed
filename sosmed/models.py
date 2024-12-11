@@ -26,6 +26,7 @@ class User(AbstractUser,PermissionsMixin):
     email = models.EmailField(unique=True,verbose_name='email address')
     profile_picture = models.ImageField(blank=True,default='profile.png',upload_to='profile_picture/')
     bio = models.TextField(max_length=500, blank=True)
+    linkedin = models.URLField(blank=True,default='https://www.linkedin.com/in/')
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -75,10 +76,6 @@ class Post(models.Model):
     like_count = models.IntegerField(default=0)
     savers = models.ManyToManyField(User, blank=True, related_name='saved')
     comment_count = models.IntegerField(default=0)
-
-    # def save(self, *args, **kwargs):
-    #     self.slug = slugify(f"{self.creator}-{self.id}")
-    #     super(Post, self).save(*args, **kwargs)
     def save(self, *args, **kwargs):
         if not self.pk:  # If the object is new (hasn't been saved yet)
             super().save(*args, **kwargs)  # Save to generate an ID
@@ -110,3 +107,19 @@ class Comments(models.Model):
         if self.image:
             return self.image.url
         return None
+
+
+class Follow(models.Model):
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('follower', 'followed')
+
+    def __str__(self):
+        return f"{self.follower.name} follows {self.followed.name}"
+
+
+
+

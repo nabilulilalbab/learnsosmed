@@ -4,28 +4,9 @@
         <a class="text-black font-bold whitespace-nowrap mr-6" href="{% url 'sosmed:add_post' %}"><i class="fas fa-plus"></i></a>
     {% endif %}
         <a class="text-black font-bold whitespace-nowrap" href="{% url 'sosmed:index' %}">For you</a>
-        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>
+        <a class="text-black font-bold whitespace-nowrap" href="{% url 'sosmed:postbyfollowing' %}">Following</a>
         {% for category in categories %}
         <a class="text-black font-bold whitespace-nowrap" href="{% url 'sosmed:category_posts' category.id %}">{{ category.name }}</a>
         {% endfor %}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">For you</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">For you</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">For you</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">For you</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Following</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Mental Health</a>#}
-{#        <a class="text-black font-bold whitespace-nowrap" href="#">Software Development</a>#}
-        <!-- More categories if needed -->
     </div>
 </nav>

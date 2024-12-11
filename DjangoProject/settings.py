@@ -119,12 +119,10 @@ LANGUAGE_CODE = 'id'  # Menggunakan 'id' untuk Bahasa Indonesia
 TIME_ZONE = 'Asia/Jakarta'  # Mengatur timezone ke Asia/Jakarta
 USE_I18N = True
 USE_TZ = True
-#
-# CRONJOBS = [
-#     ('0 0 * * *', 'sosmed.cron.create_midnight_post')
-# ]
+
 CRONJOBS = [
-    ('0 0 * * *', 'sosmed.cron.create_midnight_post')
+    ('0 0 * * *', 'sosmed.cron.create_midnight_post'),
+    ('* * * * *', 'sosmed.cron.create_every_minute_post'),
 ]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
